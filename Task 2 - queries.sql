@@ -1,0 +1,73 @@
+USE producto; SELECT nombre FROM producto;
+SELECT nombre, precio FROM producto;
+SELECT * FROM producto;
+SELECT nombre, precio AS precio_€, precio * 1.17 AS precio_$ FROM producto;
+SELECT nombre, precio AS euros, ROUND(precio * 1.17, 2) AS dolares FROM producto;
+SELECT UPPER(nombre), precio FROM producto;
+SELECT LOWER(nombre), precio FROM producto;
+SELECT nombre, LEFT(nombre, 2) FROM fabricante;
+SELECT nombre, ROUND(precio, 0) AS precio_$ FROM producto;
+SELECT nombre, FLOOR(precio) AS precio FROM producto;
+SELECT DISTINCT codigo_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT codigo_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT nombre FROM fabricante ORDER BY nombre ASC;
+SELECT nombre FROM fabricante ORDER BY nombre DESC;
+SELECT nombre, precio FROM producto ORDER BY nombre ASC, precio DESC;
+SELECT * FROM fabricante LIMIT 5;
+SELECT * FROM fabricante LIMIT 3, 2; 
+SELECT nombre, precio FROM producto ORDER BY precio ASC LIMIT 1;
+SELECT nombre, precio FROM producto ORDER BY precio DESC LIMIT 1;
+SELECT producto.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE codigo_fabricante = 2;
+SELECT producto.nombre, producto.precio, fabricante.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo ORDER BY fabricante.nombre ASC;
+SELECT producto.codigo, producto.nombre, producto.codigo_fabricante, fabricante.nombre FROM producto LEFT JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT producto.nombre, MIN(producto.precio), fabricante.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT producto.nombre, MAX(producto.precio), fabricante.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+SELECT * FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Lenovo";
+SELECT * FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Crucial" AND precio > 200;
+SELECT * FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Asus" OR fabricante.nombre = "Hewlett-Packard" OR fabricante.nombre = "Seagate";
+SELECT * FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre IN ("Asus", "Hewlett-Packard", "Seagate");
+SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE RIGHT(fabricante.nombre, 1) = "e";
+SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE "%w%";
+SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE precio > 180 ORDER BY precio DESC, producto.nombre ASC;
+SELECT DISTINCT fabricante.codigo, fabricante.nombre FROM fabricante INNER JOIN producto ON producto.codigo_fabricante = fabricante.codigo;
+SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON producto.codigo_fabricante = fabricante.codigo;
+SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON producto.codigo_fabricante = fabricante.codigo WHERE producto.nombre IS NULL;
+SELECT producto.nombre FROM producto WHERE producto.codigo_fabricante IN (SELECT fabricante.codigo FROM fabricante WHERE fabricante.nombre = "Lenovo");
+SELECT * FROM producto WHERE precio = (SELECT MAX(precio) FROM producto WHERE codigo_fabricante = (SELECT codigo FROM fabricante WHERE nombre = 'Lenovo'));
+SELECT producto.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE producto.precio = (SELECT MAX(precio) FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Lenovo");
+SELECT producto.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE producto.precio = (SELECT MIN(precio) FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Hewlett-Packard");
+SELECT producto.nombre FROM producto WHERE precio >= (SELECT MAX(precio) FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Lenovo");
+SELECT producto.nombre FROM producto WHERE precio >= (SELECT AVG(precio) FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre = "Asus");
+
+
+USE universidad; SELECT apellido1, apellido2, nombre FROM persona WHERE tipo = "alumno" ORDER BY apellido1 DESC, apellido2 DESC, nombre DESC;
+SELECT nombre, apellido1, apellido2 FROM persona WHERE tipo = "alumno" AND telefono IS NULL;
+SELECT * FROM persona WHERE tipo = "alumno" AND fecha_nacimiento LIKE "1999-%";
+SELECT nombre, apellido1, apellido2 FROM persona WHERE tipo = "profesor" AND telefono IS NULL AND NIF LIKE "%K";
+SELECT nombre FROM asignatura WHERE curso = 3 AND cuatrimestre = 1 AND id_grado = 7;
+SELECT persona.apellido1, persona.apellido2, persona.nombre, departamento.nombre FROM persona INNER JOIN profesor ON persona.id = profesor.id_profesor INNER JOIN departamento ON departamento.id = profesor.id_departamento ORDER BY apellido1, apellido2, persona.nombre ASC;
+SELECT persona.NIF, asignatura.nombre, curso_escolar.anyo_inicio, curso_escolar.anyo_fin FROM persona INNER JOIN alumno_se_matricula_asignatura ON persona.id = alumno_se_matricula_asignatura.id_alumno INNER JOIN asignatura ON asignatura.id = alumno_se_matricula_asignatura.id_asignatura INNER JOIN curso_escolar ON alumno_se_matricula_asignatura.id_curso_escolar = curso_escolar.id WHERE NIF = "26902806M";
+SELECT DISTINCT departamento.nombre FROM departamento INNER JOIN profesor ON departamento.id = profesor.id_departamento INNER JOIN asignatura ON asignatura.id_profesor = profesor.id_profesor INNER JOIN grado ON asignatura.id_grado = grado.id WHERE grado.nombre = "Grado en Ingeniería Informática (Plan 2015)";
+SELECT DISTINCT persona.nombre, persona.apellido1, persona.apellido2 FROM persona INNER JOIN alumno_se_matricula_asignatura ON alumno_se_matricula_asignatura.id_alumno = persona.id INNER JOIN asignatura ON asignatura.id = alumno_se_matricula_asignatura.id_asignatura INNER JOIN curso_escolar ON curso_escolar.id = alumno_se_matricula_asignatura.id_curso_escolar WHERE curso_escolar.anyo_inicio = 2018 AND curso_escolar.anyo_fin = 2019;
+
+
+USE universidad; SELECT departamento.nombre, persona.apellido1, persona.apellido2, persona.nombre FROM profesor LEFT JOIN departamento ON profesor.id_departamento = departamento.id LEFT JOIN persona ON persona.id = profesor.id_profesor WHERE persona.tipo = "profesor" ORDER BY departamento.nombre, apellido1, apellido2, persona.nombre ASC;
+SELECT departamento.nombre, persona.apellido1, persona.apellido2, persona.nombre FROM profesor LEFT JOIN departamento ON profesor.id_departamento = departamento.id LEFT JOIN persona ON persona.id = profesor.id_profesor WHERE persona.tipo = "profesor" AND profesor.id_departamento IS NULL ORDER BY departamento.nombre, apellido1, apellido2, persona.nombre ASC;
+SELECT departamento.nombre, persona.apellido1, persona.apellido2, persona.nombre FROM profesor RIGHT JOIN departamento ON profesor.id_departamento = departamento.id LEFT JOIN persona ON persona.id = profesor.id_profesor WHERE persona.tipo = "profesor" AND profesor.id_departamento IS NULL ORDER BY departamento.nombre, apellido1, apellido2, persona.nombre ASC;
+SELECT DISTINCT persona.apellido1, persona.apellido2, persona.nombre FROM profesor LEFT JOIN asignatura ON profesor.id_profesor = asignatura.id_profesor LEFT JOIN persona ON persona.id = profesor.id_profesor WHERE asignatura.id_profesor IS NULL;
+SELECT nombre FROM asignatura LEFT JOIN profesor ON asignatura.id_profesor = profesor.id_profesor WHERE profesor.id_profesor IS NULL;
+SELECT DISTINCT departamento.nombre FROM departamento LEFT JOIN profesor ON departamento.id = profesor.id_departamento LEFT JOIN asignatura ON asignatura.id_profesor = profesor.id_profesor LEFT JOIN alumno_se_matricula_asignatura ON alumno_se_matricula_asignatura.id_asignatura = asignatura.id LEFT JOIN curso_escolar ON alumno_se_matricula_asignatura.id_curso_escolar = curso_escolar.id WHERE asignatura.id_profesor IS NULL;
+
+
+USE universidad; SELECT DISTINCT COUNT(*) FROM persona WHERE tipo = "alumno";
+SELECT DISTINCT COUNT(*) FROM persona WHERE tipo = "alumno" AND fecha_nacimiento LIKE "1999%";
+SELECT DISTINCT departamento.nombre, COUNT(id_profesor) AS numero_profesores FROM departamento INNER JOIN profesor ON departamento.id = profesor.id_departamento GROUP BY departamento.id ORDER BY numero_profesores DESC;
+SELECT departamento.nombre, COUNT(id_profesor) AS numero_profesores FROM departamento LEFT JOIN profesor ON departamento.id = profesor.id_departamento GROUP BY departamento.nombre ORDER BY numero_profesores DESC;
+SELECT grado.nombre, COUNT(asignatura.nombre) AS numero_asignaturas FROM grado LEFT JOIN asignatura ON grado.id = asignatura.id_grado GROUP BY grado.nombre ORDER BY numero_asignaturas DESC;
+SELECT grado.nombre, COUNT(asignatura.nombre) AS numero_asignaturas FROM grado LEFT JOIN asignatura ON grado.id = asignatura.id_grado GROUP BY grado.nombre HAVING numero_asignaturas > 40 ORDER BY numero_asignaturas DESC;
+SELECT grado.nombre, asignatura.tipo, SUM(asignatura.creditos) AS numero_creditos FROM grado LEFT JOIN asignatura ON grado.id = asignatura.id_grado GROUP BY grado.nombre, asignatura.tipo ORDER BY grado.nombre, numero_creditos DESC;
+SELECT DISTINCT curso_escolar.anyo_inicio, COUNT(id_alumno) AS numero_alumnos_matriculados_asignaturas FROM curso_escolar LEFT JOIN alumno_se_matricula_asignatura ON alumno_se_matricula_asignatura.id_curso_escolar = curso_escolar.id GROUP BY id_curso_escolar, id_asignatura, anyo_inicio;
+SELECT DISTINCT persona.id, persona.nombre, persona.apellido1, persona.apellido2, COUNT(asignatura.id) AS numero_asignaturas FROM profesor LEFT JOIN asignatura ON profesor.id_profesor = asignatura.id_profesor LEFT JOIN persona ON profesor.id_profesor = persona.id GROUP BY profesor.id_profesor ORDER BY numero_asignaturas DESC;
+SELECT * FROM persona WHERE fecha_nacimiento = (SELECT MAX(fecha_nacimiento) FROM persona WHERE tipo = "alumno");
+SELECT persona.id, persona.nombre, persona.apellido1, persona.apellido2, departamento.nombre AS nombre_departamento, asignatura.id AS id_asignatura FROM profesor LEFT JOIN departamento ON departamento.id = profesor.id_departamento LEFT JOIN asignatura ON profesor.id_profesor = asignatura.id_profesor LEFT JOIN persona ON persona.id = profesor.id_profesor WHERE asignatura.id IS NULL;
