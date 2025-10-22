@@ -5,11 +5,11 @@
 /*5*/  SELECT nombre, precio AS euros, ROUND(precio * 1.17, 2) AS dolares FROM producto;
 /*6*/  SELECT UPPER(nombre), precio FROM producto;
 /*7*/  SELECT LOWER(nombre), precio FROM producto;
-/*8*/  SELECT nombre, LEFT(nombre, 2) FROM fabricante;
+/*8*/  SELECT nombre, UPPER(LEFT(nombre, 2)) FROM fabricante;
 /*9*/  SELECT nombre, ROUND(precio, 0) AS precio_$ FROM producto;
-/*10*/ SELECT nombre, FLOOR(precio) AS precio FROM producto;
-/*11*/ SELECT DISTINCT codigo_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
-/*12*/ SELECT codigo_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
+/*10*/ SELECT nombre, TRUNCATE(precio, 0) AS precio FROM producto;
+/*11*/ SELECT codigo_fabricante FROM producto;
+/*12*/ SELECT DISTINCT codigo_fabricante FROM producto;
 /*13*/ SELECT nombre FROM fabricante ORDER BY nombre ASC;
 /*14*/ SELECT nombre FROM fabricante ORDER BY nombre DESC;
 /*15*/ SELECT nombre, precio FROM producto ORDER BY nombre ASC, precio DESC;
@@ -17,7 +17,7 @@
 /*17*/ SELECT * FROM fabricante LIMIT 3, 2; 
 /*18*/ SELECT nombre, precio FROM producto ORDER BY precio ASC LIMIT 1;
 /*19*/ SELECT nombre, precio FROM producto ORDER BY precio DESC LIMIT 1;
-/*20*/ SELECT producto.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE codigo_fabricante = 2;
+/*20*/ SELECT producto.nombre FROM producto WHERE codigo_fabricante = 2;
 /*21*/ SELECT producto.nombre, producto.precio, fabricante.nombre FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
 /*22*/ SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo ORDER BY fabricante.nombre ASC;
 /*23*/ SELECT producto.codigo, producto.nombre, producto.codigo_fabricante, fabricante.nombre FROM producto LEFT JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo;
@@ -29,7 +29,7 @@
 /*29*/ SELECT * FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre IN ("Asus", "Hewlett-Packard", "Seagate");
 /*30*/ SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE RIGHT(fabricante.nombre, 1) = "e";
 /*31*/ SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE fabricante.nombre LIKE "%w%";
-/*32*/ SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE precio > 180 ORDER BY precio DESC, producto.nombre ASC;
+/*32*/ SELECT producto.nombre, producto.precio, fabricante.nombre AS nombre_fabricante FROM producto INNER JOIN fabricante ON producto.codigo_fabricante = fabricante.codigo WHERE precio >= 180 ORDER BY precio DESC, producto.nombre ASC;
 /*33*/ SELECT DISTINCT fabricante.codigo, fabricante.nombre FROM fabricante INNER JOIN producto ON producto.codigo_fabricante = fabricante.codigo;
 /*34*/ SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON producto.codigo_fabricante = fabricante.codigo;
 /*35*/ SELECT fabricante.nombre, producto.nombre FROM fabricante LEFT JOIN producto ON producto.codigo_fabricante = fabricante.codigo WHERE producto.nombre IS NULL;
